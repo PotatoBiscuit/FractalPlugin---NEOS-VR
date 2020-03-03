@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2036
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageViewer", "ImageViewer\ImageViewer.csproj", "{1BB0C522-61B4-41B2-B117-089C2B275C56}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FractalLibrary", "FractalLibrary\FractalLibrary.csproj", "{E780CD02-A68F-426A-811D-04427451F135}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ComputeFractalGpu", "ComputeFractalGpu\ComputeFractalGpu.vcxproj", "{58F857CC-ED37-4764-BEEF-328C0C17537E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,16 @@ Global
 		{E780CD02-A68F-426A-811D-04427451F135}.Release|x64.Build.0 = Release|Any CPU
 		{E780CD02-A68F-426A-811D-04427451F135}.Release|x86.ActiveCfg = Release|Any CPU
 		{E780CD02-A68F-426A-811D-04427451F135}.Release|x86.Build.0 = Release|Any CPU
+		{58F857CC-ED37-4764-BEEF-328C0C17537E}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{58F857CC-ED37-4764-BEEF-328C0C17537E}.Debug|ARM.ActiveCfg = Debug|x64
+		{58F857CC-ED37-4764-BEEF-328C0C17537E}.Debug|x64.ActiveCfg = Debug|x64
+		{58F857CC-ED37-4764-BEEF-328C0C17537E}.Debug|x64.Build.0 = Debug|x64
+		{58F857CC-ED37-4764-BEEF-328C0C17537E}.Debug|x86.ActiveCfg = Debug|x64
+		{58F857CC-ED37-4764-BEEF-328C0C17537E}.Release|Any CPU.ActiveCfg = Release|x64
+		{58F857CC-ED37-4764-BEEF-328C0C17537E}.Release|ARM.ActiveCfg = Release|x64
+		{58F857CC-ED37-4764-BEEF-328C0C17537E}.Release|x64.ActiveCfg = Release|x64
+		{58F857CC-ED37-4764-BEEF-328C0C17537E}.Release|x64.Build.0 = Release|x64
+		{58F857CC-ED37-4764-BEEF-328C0C17537E}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,8 @@
 ﻿using CodeX;
 using FrooxEngine;
 using BaseX;
+using System.Runtime.InteropServices;
+using System;
 
 namespace FractalLibrary
 {
@@ -13,6 +15,19 @@ namespace FractalLibrary
         private double rangeX;
         private double rangeY;
         private float maxIterations = 256f;
+
+        public static class GpuRef
+        {
+            private const string DllFilePath = @".\ComputeFractalGpu.dll";
+
+            [DllImport(DllFilePath, CallingConvention = CallingConvention.Cdecl)]
+            private extern static void computeMandelbrot(int[] iterArray, int width, int height, double minX, double minY, double rangeX, double rangeY);
+
+            public static void ComputeMandelbrot(int[] iterArray, int width, int height, double minX, double minY, double rangeX, double rangeY)
+            {
+                computeMandelbrot(iterArray, width, height, minX, minY, rangeX, rangeY);
+            }
+        }
 
         protected override void OnAwake()
         {
@@ -30,13 +45,34 @@ namespace FractalLibrary
 
         protected override void UpdateTextureData(Bitmap2D tex2D)
         {
-            tex2D.Clear(color.White);
             height = tex2D.Size.y;
             width = tex2D.Size.x;
             rangeX = max.Value.x - min.Value.x;
             rangeY = max.Value.y - min.Value.y;
 
-            CreateMandelbrot(tex2D);
+            try
+            {
+                CreateMandelbrotGpu(tex2D);
+            }
+            catch (DllNotFoundException)
+            {
+                CreateMandelbrot(tex2D);
+            }
+        }
+
+        private void CreateMandelbrotGpu(Bitmap2D tex2D)
+        {
+            int[] iterArray = new int[width * height];
+            GpuRef.ComputeMandelbrot(iterArray, width, height, min.Value.x, min.Value.y, rangeX, rangeY);
+            float colorToUse;
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    colorToUse = iterArray[y * width + x] / maxIterations;
+                    tex2D.SetPixel(x, y, new color(colorToUse, colorToUse, colorToUse)); //depending on the number of iterations, color a pixel.
+                }
+            }
         }
 
         private void CreateMandelbrot(Bitmap2D tex2D)

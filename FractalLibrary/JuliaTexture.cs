@@ -1,6 +1,8 @@
 ﻿using CodeX;
 using FrooxEngine;
 using BaseX;
+using System.Runtime.InteropServices;
+using System;
 
 namespace FractalLibrary
 {
@@ -13,6 +15,19 @@ namespace FractalLibrary
         private double rangeX;
         private double rangeY;
         private float maxIterations = 256f;
+
+        public static class GpuRef
+        {
+            private const string DllFilePath = @".\ComputeFractalGpu.dll";
+
+            [DllImport(DllFilePath, CallingConvention = CallingConvention.Cdecl)]
+            private extern static void computeJulia(int[] iterArray, int width, int height, double minX, double minY, double rangeX, double rangeY, double customX, double customY);
+
+            public static void ComputeJulia(int[] iterArray, int width, int height, double minX, double minY, double rangeX, double rangeY, double customX, double customY)
+            {
+                computeJulia(iterArray, width, height, minX, minY, rangeX, rangeY, customX, customY);
+            }
+        }
 
         protected override void OnAwake()
         {
@@ -37,7 +52,29 @@ namespace FractalLibrary
             rangeX = max.Value.x - min.Value.x;
             rangeY = max.Value.y - min.Value.y;
 
-            CreateJulia(tex2D);
+            try
+            {
+                CreateJuliaGpu(tex2D);
+            }
+            catch (DllNotFoundException)
+            {
+                CreateJulia(tex2D);
+            }
+        }
+
+        private void CreateJuliaGpu(Bitmap2D tex2D)
+        {
+            int[] iterArray = new int[width * height];
+            GpuRef.ComputeJulia(iterArray, width, height, min.Value.x, min.Value.y, rangeX, rangeY, customConstant.Value[0], customConstant.Value[1]);
+            float colorToUse;
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    colorToUse = iterArray[y * width + x] / maxIterations;
+                    tex2D.SetPixel(x, y, new color(colorToUse, colorToUse, colorToUse)); //depending on the number of iterations, color a pixel.
+                }
+            }
         }
 
         private void CreateJulia(Bitmap2D tex2D)

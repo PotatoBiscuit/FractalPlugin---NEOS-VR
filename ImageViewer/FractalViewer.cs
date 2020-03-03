@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using BaseX;
 
 namespace ImageViewer
@@ -10,10 +11,10 @@ namespace ImageViewer
         public int maxIterations = 400; // increasing this will give you a more detailed fractal
         public int height = 1000;
         public int width = 1500;
-        public double minX = -1;
+        public double minX = -2;
         public double minY = -1;
-        public double rangeX = 4;
-        public double rangeY = 4;
+        public double rangeX = 3;
+        public double rangeY = 2;
 
         /*
         public Bitmap MBrot(string funcToExec)
@@ -55,6 +56,39 @@ namespace ImageViewer
             return texture;
         }
         */
+        public static class NativeTest
+        {
+            private const string DllFilePath = @"C:\Users\erikd\Documents\FractalPlugin---NEOS-VR\x64\Debug\ComputeFractalGpu.dll";
+
+            [DllImport(DllFilePath, CallingConvention = CallingConvention.Cdecl)]
+            private extern static void computeMandelbrot(int[] iterArray, int width, int height, double minX, double minY, double rangeX, double rangeY);
+
+            public static void ComputeMandelbrot(int[] iterArray, int width, int height, double minX, double minY, double rangeX, double rangeY)
+            {
+                computeMandelbrot(iterArray, width, height, minX, minY, rangeX, rangeY);
+            }
+        }
+
+        public Bitmap CreateMandelbrotGpu()
+        {
+            Bitmap texture = new Bitmap(width, height);
+
+            int[] iterArray = new int[width * height];
+            NativeTest.ComputeMandelbrot(iterArray, width, height, minX, minY, rangeX, rangeY);
+
+            int iterations;
+            for(int y = 0; y < height; y++)
+            {
+                for(int x = 0; x < width; x++)
+                {
+                    iterations = iterArray[y * width + x];
+                    if (iterations == 256) iterations--;
+                    texture.SetPixel(x, y, Color.FromArgb(iterations, iterations, iterations)); //depending on the number of iterations, color a pixel.
+                }
+            }
+
+            return texture;
+        }
 
         public Bitmap CreateNewton()
         {

@@ -32,9 +32,25 @@ namespace FractalLibrary
                 }
                 else
                 {
-                    visual.Destroy();
-                    CreateNewVisual();
+                    UpdateVisual();
                 }
+            }
+        }
+
+        private void UpdateVisual()
+        {
+            FractalType fractalType = fractalData.Evaluate(new FractalData(FractalType.none, new double2(0, 0))).fractalType;
+            if ((resultTexture is MandelbrotTexture && fractalType != FractalType.mandelbrot) ||
+                (resultTexture is JuliaTexture && fractalType != FractalType.julia) ||
+                (resultTexture is NewtonTexture && fractalType != FractalType.newton))
+            {
+                visual.Destroy();
+                CreateNewVisual();
+            }
+            else
+            {
+                ChangeTextureAttributes();
+                AdjustGraphAttributes();
             }
         }
 

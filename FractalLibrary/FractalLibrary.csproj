@@ -31,6 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BaseX">
@@ -61,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HandleDoubles.cs" />
     <Compile Include="FractalNode.cs" />
     <Compile Include="FractalTexture.cs" />
     <Compile Include="FractalData.cs" />
